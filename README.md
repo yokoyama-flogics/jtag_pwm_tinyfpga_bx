@@ -1,7 +1,8 @@
 ## Playing with JTAG, my PWM module on TinyFPGA-BX, and also Python scripting
 
-Learning how to use JTAG functionality of SpinalHDL.
-Also written a small Python code with PyFtdi for FTDI FT232H breakout.
+- Learning how to use JTAG functionality of SpinalHDL.
+
+- Also written a small Python code with PyFtdi for FTDI FT232H breakout.
 
 ![photo](images/picture.jpg)
 
@@ -16,8 +17,10 @@ Also written a small Python code with PyFtdi for FTDI FT232H breakout.
 4. You need an FT232H or FT2232H breakout.
    I chose [Adafruit FT232H Breakout](https://www.adafruit.com/product/2264).
    You should **carefully disable UART mode** to configure JTAG TDO pin (D2) as input.
-   ("245 FIFO" mode is my recommendation.)
+   ("245 FIFO" mode is my recommendation.  Please find the following screen capture.)
    Regarding EEPROM programming on the breakout by FTDI FT_PROG, [this page](https://learn.adafruit.com/adafruit-ft232h-breakout/more-info) is also helpful.
+
+![ft_prog](images/ft_prog.png)
 
 ## Build
 
