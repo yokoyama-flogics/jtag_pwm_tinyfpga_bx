@@ -1,4 +1,4 @@
-## Playing with JTAG, my PWM module on TinyFPGA-BX, and also Python scripting
+# Playing with JTAG, my PWM module on TinyFPGA-BX, and also Python scripting
 
 - Learning how to use JTAG functionality of SpinalHDL.
 
@@ -68,3 +68,7 @@ $ icetime -tmd lp8k jtagpwm_tinyfpga_bx.asc
 Total number of logic levels: 4
 Total path delay: 9.60 ns (104.17 MHz)
 ```
+
+## Blog in Japanese
+
+- [Deployed JTAG functionality of SpinalHDL on TinyFPGA BX and controlled it by Python](https://flogics.com/wp/ja/2020/04/control-fpga-jtag-by-python/)
