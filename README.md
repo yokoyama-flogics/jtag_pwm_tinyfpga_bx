@@ -1,108 +1,67 @@
-Spinal Base Project
-============
-This repository is a base SBT project added to help non Scala/SBT native people in their first steps.
+## Playing with JTAG, my PWM module on TinyFPGA-BX, and also Python scripting
 
-Just one important note, you need a java JDK >= 8
+Learning how to use JTAG functionality of SpinalHDL.
+Also written a small Python code with PyFtdi for FTDI FT232H breakout.
 
-On debian : 
+![photo](images/picture.jpg)
 
-```sh
-sudo add-apt-repository -y ppa:openjdk-r/ppa
-sudo apt-get update
-sudo apt-get install openjdk-8-jdk -y
+## Preparation
 
-#To set the default java
-sudo update-alternatives --config java
-sudo update-alternatives --config javac
+1. Follow [this site](https://tinyfpga.com/bx/guide.html) and install tinyprog.
+
+2. Also follow [this site](https://github.com/SpinalHDL/SpinalHDL) and install required software SpinalHDL.
+
+3. Install Python3 and [PyFtdi](https://pypi.org/project/pyftdi/).
+
+4. You need an FT232H or FT2232H breakout.
+   I chose [Adafruit FT232H Breakout](https://www.adafruit.com/product/2264).
+   You should **carefully disable UART mode** to configure JTAG TDO pin (D2) as input.
+   ("245 FIFO" mode is my recommendation.)
+   Regarding EEPROM programming on the breakout by FTDI FT_PROG, [this page](https://learn.adafruit.com/adafruit-ft232h-breakout/more-info) is also helpful.
+
+## Build
+
+First, connect your TinyFPGA to a USB port.
+
+```bash
+$ make upload
 ```
 
-## Basics, without any IDE
+Done.
 
-You need to install SBT
+## Pin Assignments
 
-```sh
-echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
-sudo apt-get update
-sudo apt-get install sbt
+**FPGA side**: Please find this [PCF file](tinyfpga_bx.pcf).
+
+**FT232H side**:
+
+- ADBUS0 (D0): JTAG TCK (output from FT232H)
+- ADBUS1 (D1): JTAG TDI (output from FT232H)
+- ADBUS2 (D2): JTAG TDO (**input to** FT232H)
+- ADBUS3 (D3): JTAG TMS (output from FT232H)
+
+## Running Python Script
+
+```bash
+$ python3 scripts/jtag.py
 ```
 
-If you want to run the scala written testbench, you have to be on linux and have Verilator installed (a recent version) :
-
-```sh
-sudo apt-get install git make autoconf g++ flex bison -y  # First time prerequisites
-git clone http://git.veripool.org/git/verilator   # Only first time
-unsetenv VERILATOR_ROOT  # For csh; ignore error if on bash
-unset VERILATOR_ROOT  # For bash
-cd verilator
-git pull        # Make sure we're up-to-date
-git checkout verilator_3_916
-autoconf        # Create ./configure script
-./configure
-make -j$(nproc)
-sudo make install
-cd ..
-echo "DONE"
+## Logic cells utilization (without PWM)
 
 ```
-
-Clone or download this repository.
-
-```sh
-git clone https://github.com/SpinalHDL/SpinalTemplateSbt.git
+Info: Device utilisation:
+Info: 	         ICESTORM_LC:   141/ 7680     1%
+Info: 	        ICESTORM_RAM:     0/   32     0%
+Info: 	               SB_IO:     7/  256     2%
+Info: 	               SB_GB:     4/    8    50%
+Info: 	        ICESTORM_PLL:     0/    2     0%
+Info: 	         SB_WARMBOOT:     0/    1     0%
 ```
 
-Open a terminal in the root of it and run "sbt run". At the first execution, the process could take some seconds
+## Timing analysis (without PWM)
 
-```sh
-cd SpinalTemplateSbt
-
-//If you want to generate the Verilog of your design
-sbt "runMain mylib.MyTopLevelVerilog"
-
-//If you want to generate the VHDL of your design
-sbt "runMain mylib.MyTopLevelVhdl"
-
-//If you want to run the scala written testbench
-sbt "runMain mylib.MyTopLevelSim"
+```bash
+$ icetime -tmd lp8k jtagpwm_tinyfpga_bx.asc 
+Total number of logic levels: 4
+Total path delay: 9.60 ns (104.17 MHz)
 ```
-
-The top level spinal code is defined into src\main\scala\mylib
-
-## Basics, with Intellij IDEA and its scala plugin
-
-You need to install :
-
-- Java JDK 8
-- SBT
-- Intellij IDEA (the free Community Edition is good enough)
-- Intellij IDEA Scala plugin (when you run Intellij IDEA the first time, he will ask you about it)
-
-And do the following :
-
-- Clone or download this repository.
-- In Intellij IDEA, "import project" with the root of this repository, Import project from external model SBT
-- In addition maybe you need to specify some path like JDK to Intellij
-- In the project (Intellij project GUI), go in src/main/scala/mylib/MyTopLevel.scala, right click on MyTopLevelVerilog, "Run MyTopLevelVerilog"
-
-Normally, this must generate an MyTopLevel.v output files.
-
-## Basics, with Eclipse and its scala plugin
-
-You need to install :
-
-- Java JDK
-- Scala
-- SBT
-- Eclipse (tested with Mars.2 - 4.5.2)
-- [scala plugin](http://scala-ide.org/) (tested with 4.4.1)
-
-And do the following :
-
-- Clone or download this repository.
-- Run ```sbt eclipse``` in the ```SpinalTemplateSbt``` directory.
-- Import the eclipse project from eclipse.
-- In the project (eclipse project GUI), right click on src/main/scala/mylib/MyTopLevel.scala, right click on MyTopLevelVerilog, and select run it
-
-Normally, this must generate output file ```MyTopLevel.v```.
-

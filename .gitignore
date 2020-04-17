@@ -39,3 +39,6 @@ bin/
 simWorkspace/
 tmp/
 null
+*.asc
+*.bin
+*.html
