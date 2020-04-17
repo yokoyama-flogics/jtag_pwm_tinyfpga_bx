@@ -49,7 +49,7 @@ Done.
 $ python3 scripts/jtag.py
 ```
 
-## Logic cells utilization (without PWM)
+## Logic cells utilization
 
 ```
 Info: Device utilisation:
@@ -61,7 +61,7 @@ Info: 	        ICESTORM_PLL:     0/    2     0%
 Info: 	         SB_WARMBOOT:     0/    1     0%
 ```
 
-## Timing analysis (without PWM)
+## Timing analysis
 
 ```bash
 $ icetime -tmd lp8k jtagpwm_tinyfpga_bx.asc 
